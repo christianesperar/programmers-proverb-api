@@ -14,8 +14,9 @@ class ProgrammersProverbsApi {
         $proverbs = $this->_getReadMe();
         $proverbs = $this->_decodeBase64($proverbs['body']['content']);
         $proverbs = $this->_returnView($proverbs, $view);
+        $proverbs = json_encode($proverbs);
 
-        echo json_encode($proverbs);
+        echo isset( $_GET['callback'] ) ? $_GET['callback']."(".$proverbs.")" : $proverbs;
     }
 
    /**
@@ -65,4 +66,5 @@ class ProgrammersProverbsApi {
                 return $match[1][array_rand($match[1],1)];
         }
     }
+    
 }
