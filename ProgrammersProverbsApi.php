@@ -9,14 +9,12 @@ class ProgrammersProverbsApi {
      */
     public function getProverb($view = 'random')
     {
-        header('Content-Type: application/json');
-
         $proverbs = $this->_getReadMe();
         $proverbs = $this->_decodeBase64($proverbs['body']['content']);
         $proverbs = $this->_returnView($proverbs, $view);
-        $proverbs = json_encode($proverbs);
-
-        echo isset( $_GET['callback'] ) ? $_GET['callback']."(".$proverbs.")" : $proverbs;
+        $proverbs = $this->_isJSONP($proverbs);
+        
+        return $this->_returnOutput($proverbs);
     }
 
    /**
@@ -64,6 +62,32 @@ class ProgrammersProverbsApi {
                 return $match[1];
             case 'random':
                 return $match[1][array_rand($match[1],1)];
+        }
+    }
+
+    /**
+     * Return view base on user settings
+     * 
+     * @param string $proverbs
+     * @return string
+     */
+    protected function _isJSONP($proverbs) {
+        $proverbs = json_encode($proverbs);
+        
+        return isset( $_GET['callback'] ) ? $_GET['callback']."(".$proverbs.")" : $proverbs;
+    }
+
+    /**
+     * Return output base on user request
+     * 
+     * @param string $proverbs
+     * @return string
+     */
+    protected function _returnOutput($proverbs) {
+        if ( filter_input(INPUT_SERVER, 'HTTP_X_REQUESTED_WITH') === 'xmlhttprequest' ) {
+            echo $proverbs; 
+        } else {
+            return $proverbs;
         }
     }
     
