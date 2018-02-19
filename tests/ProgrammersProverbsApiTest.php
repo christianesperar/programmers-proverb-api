@@ -1,9 +1,11 @@
-<?php
-require __DIR__ . '/../src/ProgrammersProverbsApi.php';
+<?php namespace ChristianEsperar\ProgrammersProverbsApi;
 
-class ProgrammersProverbsApiTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+include_once(__DIR__ . '/../src/ProgrammersProverbsApi.php');
+
+class ProgrammersProverbsApiTest extends TestCase
 {
-
     public function setUp()
     {
         $this->proverb = new ProgrammersProverbsApi();
